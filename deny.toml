@@ -5,6 +5,10 @@ all-features = false
 [advisories]
 version = 2
 yanked = "deny"
+# Each entry needs a reason and should be revisited when Tauri updates its GTK stack.
+ignore = [
+    { id = "RUSTSEC-2024-0370", reason = "proc-macro-error is unmaintained, not vulnerable; pulled in by Tauri's Linux GTK bindings (glib-macros), no upgrade available" },
+]
 
 [licenses]
 version = 2
