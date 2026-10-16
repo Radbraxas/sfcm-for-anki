@@ -19,6 +19,7 @@ from anki.collection import DeckIdLimit, ExportAnkiPackageOptions
 from ..cards import Card
 from .fields import to_html
 from .notetypes import scratch_collection
+from .sanitize import sanitize_html
 
 DEFAULT_DECK = "SFCM"
 APP_TAG = "sfcm"
@@ -87,7 +88,7 @@ def write_package(
                 assert notetype is not None
                 note = col.new_note(notetype)
                 for name, value in note_fields(card).items():
-                    note[name] = value
+                    note[name] = sanitize_html(value)
                 note.guid = note_guid(card.id)
                 note.tags = sorted({*card.tags, APP_TAG})
                 col.add_note(note, deck_id)
