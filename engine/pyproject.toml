@@ -1,6 +1,6 @@
 [project]
 name = "sfcm-engine"
-version = "0.1.0"
+version = "0.2.0"
 description = "Engine for SFCM for Anki: Anki I/O, LLM calls, document parsing and jobs."
 license = "AGPL-3.0-or-later"
 requires-python = ">=3.12,<3.13"
