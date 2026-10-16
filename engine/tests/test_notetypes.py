@@ -6,6 +6,7 @@ from __future__ import annotations
 import re
 from pathlib import Path
 
+import pytest
 from anki.collection import Collection
 
 from sfcm_engine.cards import GENERATABLE_NOTE_TYPES
@@ -82,3 +83,31 @@ def test_type_in_and_cloze(tmp_path: Path) -> None:
     assert "[...]" in visible and "mitochondria" not in visible
     assert "mitochondria" in answer
     col.close()
+
+
+def test_theme_keys_match_the_protocol() -> None:
+    from typing import get_args
+
+    from sfcm_engine.protocol import ThemeKey
+
+    assert set(get_args(ThemeKey)) == set(THEMES)
+
+
+@pytest.mark.parametrize("theme_key", sorted(THEMES))
+def test_every_theme_supports_night_mode_and_phones(theme_key: str) -> None:
+    css = THEMES[theme_key].css
+    assert ".card.nightMode" in css and ".card.night_mode" in css
+    assert "@media (max-width: 480px)" in css
+
+
+def test_themes_get_separate_note_types(tmp_path: Path) -> None:
+    from sfcm_engine.deck.package import write_package
+
+    from .test_package import CARDS, import_into
+
+    user = Collection(str(tmp_path / "user.anki2"))
+    for key in THEMES:
+        import_into(user, write_package(CARDS[:1], tmp_path / f"{key}.apkg", theme=key).path)
+    names = {nt.name for nt in user.models.all_names_and_ids() if nt.name.startswith("SFCM")}
+    assert names == {f"SFCM Basic · {theme.name}" for theme in THEMES.values()}
+    user.close()

@@ -1,0 +1,24 @@
+/* SPDX-License-Identifier: AGPL-3.0-or-later */
+/* Signal: a solid cobalt card with white text and yellow highlights.
+   In night mode the cobalt darkens to navy so it doesn't glare. */
+.card {
+  --sfcm-page: #e9edfb;
+  --sfcm-card: #1f3fd1;
+  --sfcm-card-image: none;
+  --sfcm-ink: #ffffff;
+  --sfcm-muted: #c3cdff;
+  --sfcm-line: rgba(255, 255, 255, .22);
+  --sfcm-accent: #ffd84d;
+  --sfcm-label: #ffd84d;
+  --sfcm-panel: rgba(255, 255, 255, .1);
+  --sfcm-cloze: #ffd84d;
+  --sfcm-cloze-ink: #13203f;
+}
+.card.nightMode, .card.night_mode, .nightMode .card, .night_mode .card {
+  --sfcm-page: #0b1024;
+  --sfcm-card: #172a7a;
+  --sfcm-muted: #a9b6ef;
+  --sfcm-accent: #ffe17a;
+  --sfcm-label: #ffe17a;
+  --sfcm-cloze: #ffe17a;
+}

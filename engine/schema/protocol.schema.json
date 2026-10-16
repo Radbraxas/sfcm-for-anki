@@ -285,8 +285,12 @@
           "type": "string"
         },
         "theme": {
-          "const": "index",
           "default": "index",
+          "enum": [
+            "index",
+            "night",
+            "signal"
+          ],
           "title": "Theme",
           "type": "string"
         },

@@ -29,4 +29,6 @@ class Theme:
 
 THEMES: dict[str, Theme] = {
     "index": Theme("index", 0, "Index card"),
+    "night": Theme("night", 1, "Night"),
+    "signal": Theme("signal", 2, "Signal"),
 }

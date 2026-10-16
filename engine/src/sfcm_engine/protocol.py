@@ -111,7 +111,7 @@ class CardsGenerateResult(CamelModel):
 
 # --- decks/* ----------------------------------------------------------------
 
-ThemeKey = Literal["index"]
+ThemeKey = Literal["index", "night", "signal"]  # must match deck/themes.py
 
 
 class DecksExportParams(CamelModel):

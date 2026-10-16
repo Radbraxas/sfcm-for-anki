@@ -1,0 +1,19 @@
+/* SPDX-License-Identifier: AGPL-3.0-or-later */
+/* Night: a dark slate card with periwinkle accents and amber labels. Dark in both
+   modes; night mode only deepens the page behind the card. */
+.card {
+  --sfcm-page: #121722;
+  --sfcm-card: #1c2333;
+  --sfcm-card-image: linear-gradient(160deg, #1c2333 0%, #232c40 100%);
+  --sfcm-ink: #e6eaf2;
+  --sfcm-muted: #8f9ab0;
+  --sfcm-line: #2f3a50;
+  --sfcm-accent: #9fb4ff;
+  --sfcm-label: #f2c96b;
+  --sfcm-panel: rgba(159, 180, 255, .08);
+  --sfcm-cloze: #9fb4ff;
+  --sfcm-cloze-ink: #111727;
+}
+.card.nightMode, .card.night_mode, .nightMode .card, .night_mode .card {
+  --sfcm-page: #0a0d14;
+}

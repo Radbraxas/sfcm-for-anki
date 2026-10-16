@@ -13,9 +13,11 @@
 .sfcm { max-width: 640px; margin: 0 auto; }
 .sfcm-front, .sfcm-back {
   background: var(--sfcm-card);
+  color: var(--sfcm-ink);
   border-radius: 14px;
   padding: 22px 26px;
 }
+.sfcm-front { background: var(--sfcm-card-image, none), var(--sfcm-card); }
 .sfcm-back { margin-top: 0; padding-top: 18px; }
 .sfcm-eyebrow {
   display: flex;
@@ -26,6 +28,8 @@
   letter-spacing: .12em;
   text-transform: uppercase;
   color: var(--sfcm-muted);
+  padding-bottom: 8px;
+  border-bottom: 2px solid var(--sfcm-rule, var(--sfcm-line));
 }
 .sfcm-prompt { font-size: 1.12em; font-weight: 600; }
 .sfcm-answer { font-size: 1.05em; }
@@ -45,3 +49,10 @@ hr#answer { border: 0; border-top: 2px solid var(--sfcm-line); margin: 0 auto; m
 .cloze { font-weight: 700; color: var(--sfcm-cloze-ink); background: var(--sfcm-cloze); border-radius: 5px; padding: 0 6px; }
 code { font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace; font-size: .88em; background: var(--sfcm-panel); border-radius: 4px; padding: 1px 5px; }
 input#typeans { font-size: 18px; width: 100%; box-sizing: border-box; margin-top: 14px; padding: 8px 10px; border-radius: 8px; border: 1px solid var(--sfcm-line); }
+
+/* Phones: AnkiDroid and AnkiMobile render cards edge to edge. */
+@media (max-width: 480px) {
+  .card { font-size: 18px; padding: 8px; }
+  .sfcm-front, .sfcm-back { padding: 16px 16px; border-radius: 10px; }
+  .sfcm-eyebrow { margin-bottom: 14px; }
+}

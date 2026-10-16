@@ -88,7 +88,7 @@ outPath: string
  * Anki deck path, `::` for subdecks.
  */
 deckName?: string
-theme?: "index"
+theme?: ("index" | "night" | "signal")
 /**
  * Older package format for Anki < 2.1.50.
  */

@@ -95,6 +95,10 @@ build: build-engine
 smoke *PROVIDERS:
     {{engine}} python engine/scripts/live_smoke.py {{PROVIDERS}}
 
+# Render every card theme in light and night mode to .sfcm-data/theme-preview.html
+theme-preview:
+    {{engine}} python engine/scripts/theme_preview.py .sfcm-data/theme-preview.html
+
 # --- Evals -----------------------------------------------------------------
 
 # Score card quality against the golden sources (needs ANTHROPIC_API_KEY)

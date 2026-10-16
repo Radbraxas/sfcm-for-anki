@@ -1,14 +1,29 @@
 /* SPDX-License-Identifier: AGPL-3.0-or-later */
-/* Index card: white card on a cool grey page, cobalt accent, red labels. */
+/* Index card: a white card with a red rule under the header, cobalt accent, red labels.
+   In night mode the card turns slate and the rule darkens. */
 .card {
   --sfcm-page: #eef1f6;
   --sfcm-card: #ffffff;
+  --sfcm-rule: #e2493f;
   --sfcm-ink: #1b2333;
-  --sfcm-muted: #7a8599;
+  --sfcm-muted: #6b7689;
   --sfcm-line: #dbe3ee;
   --sfcm-accent: #2346d8;
-  --sfcm-label: #e2493f;
-  --sfcm-panel: rgba(35, 70, 216, .06);
+  --sfcm-label: #c8372d;
+  --sfcm-panel: rgba(35, 70, 216, .07);
   --sfcm-cloze: #2346d8;
   --sfcm-cloze-ink: #ffffff;
+}
+.card.nightMode, .card.night_mode, .nightMode .card, .night_mode .card {
+  --sfcm-page: #0f131b;
+  --sfcm-card: #1a202c;
+  --sfcm-rule: #b5463f;
+  --sfcm-ink: #e6eaf2;
+  --sfcm-muted: #9aa4b6;
+  --sfcm-line: #2c3548;
+  --sfcm-accent: #9fb4ff;
+  --sfcm-label: #ff8a80;
+  --sfcm-panel: rgba(159, 180, 255, .08);
+  --sfcm-cloze: #9fb4ff;
+  --sfcm-cloze-ink: #111727;
 }
