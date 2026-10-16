@@ -1,0 +1,29 @@
+name: Card quality
+description: The app produced cards that are wrong, vague, duplicated or badly formed.
+labels: ["card-quality", "triage"]
+body:
+  - type: textarea
+    id: source
+    attributes:
+      label: Source text
+      description: The text the cards were made from (or a shorter excerpt that reproduces the problem). Don't paste anything private.
+    validations:
+      required: true
+  - type: textarea
+    id: settings
+    attributes:
+      label: Settings
+      description: Provider, model, card count, mix, depth, language, extras.
+    validations:
+      required: true
+  - type: textarea
+    id: cards
+    attributes:
+      label: Cards you got
+      description: Paste the problem cards. Each card records its prompt version; include it.
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: What a good card would look like

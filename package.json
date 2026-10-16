@@ -1,0 +1,17 @@
+{
+  "name": "sfcm-for-anki",
+  "private": true,
+  "license": "AGPL-3.0-or-later",
+  "packageManager": "pnpm@9.15.4",
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "tauri": "tauri"
+  },
+  "devDependencies": {
+    "@biomejs/biome": "^1.9",
+    "@tauri-apps/cli": "^2",
+    "lefthook": "^1"
+  }
+}

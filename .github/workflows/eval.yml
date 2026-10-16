@@ -1,0 +1,45 @@
+name: Card quality eval
+
+# Spends API credit, so it runs nightly and on PRs that change prompts or model calls.
+# Needs the ANTHROPIC_API_KEY repository secret; forks never receive it, so the
+# job skips itself there.
+on:
+  schedule:
+    - cron: "17 3 * * *"
+  workflow_dispatch:
+  pull_request:
+    paths:
+      - prompts/**
+      - engine/src/sfcm_engine/llm/**
+      - engine/src/sfcm_engine/generation.py
+      - evals/**
+
+permissions:
+  contents: read
+  pull-requests: write
+
+jobs:
+  eval:
+    runs-on: ubuntu-22.04
+    env:
+      ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+    steps:
+      - name: Skip without an API key
+        if: env.ANTHROPIC_API_KEY == ''
+        run: echo "::notice::ANTHROPIC_API_KEY is not set; skipping the eval."
+      - uses: actions/checkout@v4
+        if: env.ANTHROPIC_API_KEY != ''
+      - uses: astral-sh/setup-uv@v6
+        if: env.ANTHROPIC_API_KEY != ''
+      - uses: extractions/setup-just@v2
+        if: env.ANTHROPIC_API_KEY != ''
+      - name: Run eval
+        if: env.ANTHROPIC_API_KEY != ''
+        run: |
+          uv sync --project engine --locked
+          just eval --count 8 --fail-on-regression | tee eval-report.md
+      - name: Comment on the pull request
+        if: always() && env.ANTHROPIC_API_KEY != '' && github.event_name == 'pull_request'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh pr comment "${{ github.event.pull_request.number }}" --body-file eval-report.md

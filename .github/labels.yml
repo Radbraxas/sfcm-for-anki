@@ -1,0 +1,16 @@
+# Synced to GitHub by `python3 scripts/sync_labels.py`. Epics mirror docs/roadmap.csv.
+- { name: "epic:foundations", color: "5319e7", description: "Roadmap epic A" }
+- { name: "epic:anki-core", color: "5319e7", description: "Roadmap epic B" }
+- { name: "epic:card-studio", color: "5319e7", description: "Roadmap epic C" }
+- { name: "epic:folder-ingest", color: "5319e7", description: "Roadmap epic D" }
+- { name: "epic:deck-improver", color: "5319e7", description: "Roadmap epic E" }
+- { name: "epic:release", color: "5319e7", description: "Roadmap epic F" }
+- { name: "P0", color: "b60205", description: "Must have for the milestone" }
+- { name: "P1", color: "d93f0b", description: "Should have" }
+- { name: "P2", color: "fbca04", description: "Nice to have" }
+- { name: "bug", color: "d73a4a", description: "Something isn't working" }
+- { name: "enhancement", color: "a2eeef", description: "New feature or request" }
+- { name: "card-quality", color: "0e8a16", description: "Generated cards are wrong or weak" }
+- { name: "triage", color: "ededed", description: "Needs a maintainer to look" }
+- { name: "good first issue", color: "7057ff", description: "Small, well-described starter task" }
+- { name: "security", color: "000000", description: "Security-related" }

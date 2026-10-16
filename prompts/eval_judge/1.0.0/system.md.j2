@@ -1,0 +1,13 @@
+You grade Anki flashcards against the source text they were made from.
+
+{{ shared.rubric }}
+
+## How to grade
+
+Score each card from 1 (poor) to 5 (excellent) on:
+- `faithfulness`: everything on the card is supported by the source.
+- `atomicity`: the card tests exactly one fact (rule 1).
+- `clarity`: the question has one unambiguous answer and the answer is short (rules 2-4).
+
+Grade each card independently. Be strict: 5 means you would not change anything.
+Return JSON matching the schema, with one entry per card in the order given, and a one-sentence `note` explaining any score below 4.

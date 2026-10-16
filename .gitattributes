@@ -1,0 +1,6 @@
+* text=auto eol=lf
+*.png binary
+*.ico binary
+*.icns binary
+ui/src/ipc/protocol.gen.ts linguist-generated=true
+engine/schema/protocol.schema.json linguist-generated=true

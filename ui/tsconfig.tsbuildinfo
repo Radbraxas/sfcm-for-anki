@@ -1,0 +1,1 @@
+{"root":["./src/App.test.tsx","./src/App.tsx","./src/main.tsx","./src/messages.ts","./src/ipc/engine.test.ts","./src/ipc/engine.ts","./src/ipc/protocol.gen.ts","./src/ipc/secrets.ts","./vite.config.ts"],"version":"5.7.3"}

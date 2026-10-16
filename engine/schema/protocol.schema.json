@@ -1,0 +1,656 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "SFCM engine protocol",
+  "x-protocol-version": 1,
+  "x-methods": {
+    "cards/generate": {
+      "params": "CardsGenerateParams",
+      "result": "CardsGenerateResult"
+    },
+    "engine/info": {
+      "params": "Empty",
+      "result": "EngineInfo"
+    },
+    "providers/list": {
+      "params": "Empty",
+      "result": "ProviderList"
+    },
+    "providers/test": {
+      "params": "ProviderTestParams",
+      "result": "ProviderTestResult"
+    },
+    "settings/get": {
+      "params": "SettingsGetParams",
+      "result": "SettingValue"
+    },
+    "settings/set": {
+      "params": "SettingsSetParams",
+      "result": "SettingValue"
+    }
+  },
+  "x-shell-methods": {
+    "secrets/get": {
+      "params": "SecretsGetParams",
+      "result": "SecretsGetResult"
+    }
+  },
+  "x-notifications": {
+    "$/progress": "ProgressParams",
+    "$/ready": "ReadyParams"
+  },
+  "$defs": {
+    "Card": {
+      "additionalProperties": false,
+      "properties": {
+        "noteType": {
+          "description": "Anki note type that fits this fact best.",
+          "enum": [
+            "basic",
+            "basic_reversed",
+            "basic_optional_reversed",
+            "basic_type_in",
+            "cloze"
+          ],
+          "title": "Notetype",
+          "type": "string"
+        },
+        "front": {
+          "description": "Question side. Empty for cloze cards.",
+          "title": "Front",
+          "type": "string"
+        },
+        "back": {
+          "description": "Short answer, ideally under 15 words. Empty for cloze.",
+          "title": "Back",
+          "type": "string"
+        },
+        "text": {
+          "description": "Cloze sentence with {{c1::...}} deletions. Empty otherwise.",
+          "title": "Text",
+          "type": "string"
+        },
+        "why": {
+          "description": "1-2 sentences on why the answer is true. May be empty.",
+          "title": "Why",
+          "type": "string"
+        },
+        "example": {
+          "description": "A concrete example. May be empty.",
+          "title": "Example",
+          "type": "string"
+        },
+        "mnemonic": {
+          "description": "A memory hook, only if genuinely useful. May be empty.",
+          "title": "Mnemonic",
+          "type": "string"
+        },
+        "tags": {
+          "description": "1-3 lowercase-hyphenated topic tags.",
+          "items": {
+            "type": "string"
+          },
+          "title": "Tags",
+          "type": "array"
+        },
+        "id": {
+          "title": "Id",
+          "type": "string"
+        },
+        "source": {
+          "description": "Where the card came from, e.g. a file and heading.",
+          "title": "Source",
+          "type": "string"
+        },
+        "promptVersion": {
+          "title": "Promptversion",
+          "type": "string"
+        },
+        "model": {
+          "title": "Model",
+          "type": "string"
+        }
+      },
+      "required": [
+        "noteType",
+        "front",
+        "back",
+        "text",
+        "why",
+        "example",
+        "mnemonic",
+        "tags",
+        "id",
+        "source",
+        "promptVersion",
+        "model"
+      ],
+      "title": "Card",
+      "type": "object"
+    },
+    "CardsGenerateParams": {
+      "additionalProperties": false,
+      "properties": {
+        "source": {
+          "maxLength": 400000,
+          "minLength": 1,
+          "title": "Source",
+          "type": "string"
+        },
+        "sourceLabel": {
+          "default": "pasted text",
+          "title": "Sourcelabel",
+          "type": "string"
+        },
+        "count": {
+          "default": 12,
+          "maximum": 60,
+          "minimum": 1,
+          "title": "Count",
+          "type": "integer"
+        },
+        "mix": {
+          "default": "auto",
+          "enum": [
+            "auto",
+            "basic",
+            "cloze"
+          ],
+          "title": "Mix",
+          "type": "string"
+        },
+        "depth": {
+          "default": "university",
+          "enum": [
+            "intro",
+            "university",
+            "expert"
+          ],
+          "title": "Depth",
+          "type": "string"
+        },
+        "language": {
+          "default": "English",
+          "title": "Language",
+          "type": "string"
+        },
+        "extras": {
+          "default": "all",
+          "enum": [
+            "all",
+            "why",
+            "none"
+          ],
+          "title": "Extras",
+          "type": "string"
+        },
+        "providerId": {
+          "anyOf": [
+            {
+              "enum": [
+                "anthropic",
+                "openai",
+                "ollama",
+                "lmstudio"
+              ],
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Providerid"
+        },
+        "model": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Model"
+        }
+      },
+      "required": [
+        "source"
+      ],
+      "title": "CardsGenerateParams",
+      "type": "object"
+    },
+    "CardsGenerateResult": {
+      "additionalProperties": false,
+      "properties": {
+        "cards": {
+          "items": {
+            "$ref": "#/$defs/Card"
+          },
+          "title": "Cards",
+          "type": "array"
+        },
+        "rejected": {
+          "description": "Cards dropped by validation.",
+          "title": "Rejected",
+          "type": "integer"
+        },
+        "promptVersion": {
+          "title": "Promptversion",
+          "type": "string"
+        },
+        "model": {
+          "title": "Model",
+          "type": "string"
+        },
+        "usage": {
+          "$ref": "#/$defs/Usage"
+        }
+      },
+      "required": [
+        "cards",
+        "rejected",
+        "promptVersion",
+        "model",
+        "usage"
+      ],
+      "title": "CardsGenerateResult",
+      "type": "object"
+    },
+    "Empty": {
+      "additionalProperties": false,
+      "properties": {},
+      "title": "Empty",
+      "type": "object"
+    },
+    "EngineInfo": {
+      "additionalProperties": false,
+      "properties": {
+        "engineVersion": {
+          "title": "Engineversion",
+          "type": "string"
+        },
+        "protocolVersion": {
+          "title": "Protocolversion",
+          "type": "integer"
+        },
+        "pythonVersion": {
+          "title": "Pythonversion",
+          "type": "string"
+        },
+        "ankiVersion": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "description": "Version of the anki package, if bundled.",
+          "title": "Ankiversion"
+        },
+        "dataDir": {
+          "title": "Datadir",
+          "type": "string"
+        }
+      },
+      "required": [
+        "engineVersion",
+        "protocolVersion",
+        "pythonVersion",
+        "ankiVersion",
+        "dataDir"
+      ],
+      "title": "EngineInfo",
+      "type": "object"
+    },
+    "JsonValue": {},
+    "ProgressParams": {
+      "additionalProperties": false,
+      "properties": {
+        "requestId": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "integer"
+            }
+          ],
+          "title": "Requestid"
+        },
+        "message": {
+          "description": "Stable progress key, e.g. 'calling_provider'.",
+          "title": "Message",
+          "type": "string"
+        },
+        "fraction": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Fraction"
+        }
+      },
+      "required": [
+        "requestId",
+        "message",
+        "fraction"
+      ],
+      "title": "ProgressParams",
+      "type": "object"
+    },
+    "ProviderInfo": {
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "enum": [
+            "anthropic",
+            "openai",
+            "ollama",
+            "lmstudio"
+          ],
+          "title": "Id",
+          "type": "string"
+        },
+        "name": {
+          "title": "Name",
+          "type": "string"
+        },
+        "location": {
+          "enum": [
+            "cloud",
+            "local"
+          ],
+          "title": "Location",
+          "type": "string"
+        },
+        "needsApiKey": {
+          "title": "Needsapikey",
+          "type": "boolean"
+        },
+        "defaultModel": {
+          "title": "Defaultmodel",
+          "type": "string"
+        },
+        "baseUrl": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Baseurl"
+        },
+        "blockedByLocalOnly": {
+          "title": "Blockedbylocalonly",
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "id",
+        "name",
+        "location",
+        "needsApiKey",
+        "defaultModel",
+        "baseUrl",
+        "blockedByLocalOnly"
+      ],
+      "title": "ProviderInfo",
+      "type": "object"
+    },
+    "ProviderList": {
+      "additionalProperties": false,
+      "properties": {
+        "providers": {
+          "items": {
+            "$ref": "#/$defs/ProviderInfo"
+          },
+          "title": "Providers",
+          "type": "array"
+        },
+        "localOnly": {
+          "title": "Localonly",
+          "type": "boolean"
+        },
+        "activeProvider": {
+          "enum": [
+            "anthropic",
+            "openai",
+            "ollama",
+            "lmstudio"
+          ],
+          "title": "Activeprovider",
+          "type": "string"
+        }
+      },
+      "required": [
+        "providers",
+        "localOnly",
+        "activeProvider"
+      ],
+      "title": "ProviderList",
+      "type": "object"
+    },
+    "ProviderTestParams": {
+      "additionalProperties": false,
+      "properties": {
+        "providerId": {
+          "enum": [
+            "anthropic",
+            "openai",
+            "ollama",
+            "lmstudio"
+          ],
+          "title": "Providerid",
+          "type": "string"
+        },
+        "model": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Model"
+        }
+      },
+      "required": [
+        "providerId"
+      ],
+      "title": "ProviderTestParams",
+      "type": "object"
+    },
+    "ProviderTestResult": {
+      "additionalProperties": false,
+      "properties": {
+        "ok": {
+          "title": "Ok",
+          "type": "boolean"
+        },
+        "model": {
+          "title": "Model",
+          "type": "string"
+        },
+        "latencyMs": {
+          "title": "Latencyms",
+          "type": "integer"
+        }
+      },
+      "required": [
+        "ok",
+        "model",
+        "latencyMs"
+      ],
+      "title": "ProviderTestResult",
+      "type": "object"
+    },
+    "ReadyParams": {
+      "additionalProperties": false,
+      "properties": {
+        "engineVersion": {
+          "title": "Engineversion",
+          "type": "string"
+        },
+        "protocolVersion": {
+          "title": "Protocolversion",
+          "type": "integer"
+        }
+      },
+      "required": [
+        "engineVersion",
+        "protocolVersion"
+      ],
+      "title": "ReadyParams",
+      "type": "object"
+    },
+    "SecretsGetParams": {
+      "additionalProperties": false,
+      "properties": {
+        "service": {
+          "enum": [
+            "anthropic",
+            "openai",
+            "ollama",
+            "lmstudio"
+          ],
+          "title": "Service",
+          "type": "string"
+        }
+      },
+      "required": [
+        "service"
+      ],
+      "title": "SecretsGetParams",
+      "type": "object"
+    },
+    "SecretsGetResult": {
+      "additionalProperties": false,
+      "properties": {
+        "value": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Value"
+        }
+      },
+      "required": [
+        "value"
+      ],
+      "title": "SecretsGetResult",
+      "type": "object"
+    },
+    "SettingValue": {
+      "additionalProperties": false,
+      "properties": {
+        "key": {
+          "title": "Key",
+          "type": "string"
+        },
+        "value": {
+          "$ref": "#/$defs/JsonValue"
+        }
+      },
+      "required": [
+        "key",
+        "value"
+      ],
+      "title": "SettingValue",
+      "type": "object"
+    },
+    "SettingsGetParams": {
+      "additionalProperties": false,
+      "properties": {
+        "key": {
+          "title": "Key",
+          "type": "string"
+        }
+      },
+      "required": [
+        "key"
+      ],
+      "title": "SettingsGetParams",
+      "type": "object"
+    },
+    "SettingsSetParams": {
+      "additionalProperties": false,
+      "properties": {
+        "key": {
+          "title": "Key",
+          "type": "string"
+        },
+        "value": {
+          "$ref": "#/$defs/JsonValue"
+        }
+      },
+      "required": [
+        "key",
+        "value"
+      ],
+      "title": "SettingsSetParams",
+      "type": "object"
+    },
+    "Usage": {
+      "additionalProperties": false,
+      "properties": {
+        "inputTokens": {
+          "default": 0,
+          "title": "Inputtokens",
+          "type": "integer"
+        },
+        "outputTokens": {
+          "default": 0,
+          "title": "Outputtokens",
+          "type": "integer"
+        },
+        "cacheReadTokens": {
+          "default": 0,
+          "title": "Cachereadtokens",
+          "type": "integer"
+        },
+        "cacheWriteTokens": {
+          "default": 0,
+          "title": "Cachewritetokens",
+          "type": "integer"
+        },
+        "costUsd": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Costusd"
+        }
+      },
+      "required": [
+        "inputTokens",
+        "outputTokens",
+        "cacheReadTokens",
+        "cacheWriteTokens",
+        "costUsd"
+      ],
+      "title": "Usage",
+      "type": "object"
+    }
+  }
+}

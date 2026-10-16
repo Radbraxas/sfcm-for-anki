@@ -1,0 +1,20 @@
+name: Feature request
+description: Suggest an improvement or a new capability.
+labels: ["enhancement", "triage"]
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: What are you trying to do?
+      description: Describe the study workflow or problem, not only the solution.
+    validations:
+      required: true
+  - type: textarea
+    id: proposal
+    attributes:
+      label: What would help?
+  - type: input
+    id: roadmap
+    attributes:
+      label: Related roadmap task
+      placeholder: "e.g. D04"

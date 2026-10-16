@@ -1,0 +1,18 @@
+# Git hooks. Installed by `just setup`.
+pre-commit:
+  parallel: true
+  commands:
+    python:
+      glob: "*.py"
+      run: uv run --project engine ruff check {staged_files} && uv run --project engine ruff format --check {staged_files}
+    web:
+      glob: "*.{ts,tsx,mjs,json}"
+      run: pnpm exec biome check --no-errors-on-unmatched {staged_files}
+    rust:
+      glob: "*.rs"
+      run: cargo fmt --all --check
+
+commit-msg:
+  commands:
+    signoff:
+      run: python3 scripts/check_commit_msg.py {1}

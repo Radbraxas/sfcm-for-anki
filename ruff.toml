@@ -1,0 +1,16 @@
+# Shared by engine/, evals/ and scripts/.
+line-length = 100
+target-version = "py312"
+
+[lint]
+select = ["E", "F", "W", "I", "B", "UP", "SIM", "RUF", "ASYNC", "S"]
+ignore = ["S101"]  # assert is fine in tests and invariants
+
+[lint.isort]
+known-first-party = ["sfcm_engine", "evals"]
+
+[lint.per-file-ignores]
+"**/tests/**" = ["S", "ASYNC110"]  # polling a fake wire is fine in tests
+"engine/sfcm-engine.spec" = ["F821"]
+"evals/run.py" = ["ASYNC240"]  # a one-shot CLI; blocking file I/O is fine
+"scripts/**" = ["S603", "S607"]  # dev scripts run fixed, known tools

@@ -1,0 +1,22 @@
+# Rust
+/target/
+# Node
+node_modules/
+ui/dist/
+# Python
+__pycache__/
+*.pyc
+.venv/
+engine/build/
+engine/dist/
+.pytest_cache/
+.ruff_cache/
+# App data in dev
+.sfcm-data/
+# Eval reports (baseline is committed)
+evals/reports/*
+!evals/reports/.gitkeep
+# OS / editors
+.DS_Store
+.idea/
+.vscode/
