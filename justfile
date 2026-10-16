@@ -99,6 +99,10 @@ smoke *PROVIDERS:
 theme-preview:
     {{engine}} python engine/scripts/theme_preview.py .sfcm-data/theme-preview.html
 
+# Export the sample deck in every theme (default: .sfcm-data/samples)
+sample-deck *DIR:
+    {{engine}} python engine/scripts/sample_deck.py {{DIR}}
+
 # --- Evals -----------------------------------------------------------------
 
 # Score card quality against the golden sources (needs ANTHROPIC_API_KEY)

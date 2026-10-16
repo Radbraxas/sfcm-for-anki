@@ -4,6 +4,11 @@
 Each card's note gets a GUID derived from the card id. When a user imports a newer
 export of the same cards, Anki matches notes by GUID and updates their fields in
 place, keeping review history, instead of adding duplicates.
+
+The theme is not part of the GUID: a card is the same note in every theme. Anki will
+not move an existing note to another note type during import, so re-exporting cards
+the user already has in a *different* theme is reported as a conflict and skipped.
+Changing the theme of imported cards is a note type change (roadmap E07).
 """
 
 from __future__ import annotations

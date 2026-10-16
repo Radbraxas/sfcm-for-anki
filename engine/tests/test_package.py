@@ -148,3 +148,13 @@ async def test_export_method_validates_path(
     by_id = {r["id"]: r for r in wire.responses()}
     assert by_id["bad"]["error"]["data"]["reason"] == "invalid_export_path"
     assert by_id["good"]["result"] == {"path": str(tmp_path / "deck.apkg"), "notes": 4, "cards": 6}
+
+
+def test_theme_change_on_reimport_is_a_conflict_not_a_duplicate(tmp_path: Path) -> None:
+    """Documents Anki's behavior: restyling imported cards needs a note type change (E07)."""
+    user = Collection(str(tmp_path / "user.anki2"))
+    import_into(user, write_package(CARDS, tmp_path / "index.apkg", theme="index").path)
+    log = import_into(user, write_package(CARDS, tmp_path / "night.apkg", theme="night").path)
+    assert (len(log.new), len(log.conflicting)) == (0, 4)
+    assert len(user.find_notes("")) == 4
+    user.close()
