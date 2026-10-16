@@ -5,7 +5,7 @@
 # launch, which is slow and commonly flagged by antivirus software.
 from pathlib import Path
 
-from PyInstaller.utils.hooks import collect_data_files, collect_submodules
+from PyInstaller.utils.hooks import collect_all, collect_data_files, collect_submodules
 
 ENGINE = Path(SPECPATH)
 REPO = ENGINE.parent
@@ -13,10 +13,17 @@ REPO = ENGINE.parent
 datas = [(str(REPO / "prompts"), "prompts")]
 datas += collect_data_files("sfcm_engine")  # SQL migrations
 hiddenimports = collect_submodules("sfcm_engine")
+binaries = []
+# Anki's Rust core (_rsbridge) and its data files.
+anki_datas, anki_binaries, anki_hidden = collect_all("anki")
+datas += anki_datas
+binaries += anki_binaries
+hiddenimports += anki_hidden
 
 a = Analysis(
     [str(ENGINE / "scripts" / "frozen_entry.py")],
     pathex=[str(ENGINE / "src")],
+    binaries=binaries,
     datas=datas,
     hiddenimports=hiddenimports,
     excludes=["tkinter", "pytest", "pyright", "ruff"],

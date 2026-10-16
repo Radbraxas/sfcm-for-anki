@@ -44,6 +44,8 @@ ALLOWED = {
 ALIASES = {
     "MIT License": "MIT",
     "BSD License": "BSD-3-Clause",
+    "BSD": "BSD-3-Clause",
+    "3-Clause BSD License": "BSD-3-Clause",
     "Apache Software License": "Apache-2.0",
     "Apache License 2.0": "Apache-2.0",
     "Mozilla Public License 2.0 (MPL 2.0)": "MPL-2.0",
