@@ -3,7 +3,7 @@
 // They never pass through the engine and are never stored by the UI (roadmap A08).
 import { invoke } from "@tauri-apps/api/core";
 
-export type KeyService = "anthropic" | "openai";
+export type KeyService = "anthropic" | "openai" | "custom";
 
 export function saveKey(service: KeyService, value: string): Promise<void> {
   return invoke("secrets_set", { service, value });

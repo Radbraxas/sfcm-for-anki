@@ -7,7 +7,7 @@ use sfcm_engine_host::{RpcError, ShellHandler};
 
 /// Keychain "service" name; each provider is an account under it.
 pub const KEYCHAIN_SERVICE: &str = "org.sfcmforanki.desktop";
-pub const ALLOWED: [&str; 2] = ["anthropic", "openai"];
+pub const ALLOWED: [&str; 3] = ["anthropic", "openai", "custom"];
 
 fn entry(account: &str) -> Result<keyring::Entry, String> {
     if !ALLOWED.contains(&account) {
@@ -75,6 +75,14 @@ mod tests {
     fn unknown_accounts_are_refused() {
         assert!(entry("../../etc").is_err());
         assert!(set("github", "token").is_err());
+    }
+
+    #[test]
+    fn cloud_and_custom_accounts_are_allowed() {
+        for account in ["anthropic", "openai", "custom"] {
+            assert!(entry(account).is_ok(), "{account} should be allowed");
+        }
+        assert!(entry("ollama").is_err());
     }
 
     #[test]

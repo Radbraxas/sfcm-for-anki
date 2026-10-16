@@ -190,7 +190,8 @@
                 "anthropic",
                 "openai",
                 "ollama",
-                "lmstudio"
+                "lmstudio",
+                "custom"
               ],
               "type": "string"
             },
@@ -354,7 +355,8 @@
             "anthropic",
             "openai",
             "ollama",
-            "lmstudio"
+            "lmstudio",
+            "custom"
           ],
           "title": "Id",
           "type": "string"
@@ -426,7 +428,8 @@
             "anthropic",
             "openai",
             "ollama",
-            "lmstudio"
+            "lmstudio",
+            "custom"
           ],
           "title": "Activeprovider",
           "type": "string"
@@ -448,7 +451,8 @@
             "anthropic",
             "openai",
             "ollama",
-            "lmstudio"
+            "lmstudio",
+            "custom"
           ],
           "title": "Providerid",
           "type": "string"
@@ -523,7 +527,8 @@
             "anthropic",
             "openai",
             "ollama",
-            "lmstudio"
+            "lmstudio",
+            "custom"
           ],
           "title": "Service",
           "type": "string"

@@ -12,6 +12,7 @@ const REASONS: Record<string, string> = {
   model_not_found: "That model isn't available for this provider. Pick another model.",
   local_only_blocked:
     "Local-only mode is on, so cloud providers are blocked. Choose Ollama or LM Studio, or turn local-only off.",
+  provider_not_configured: "Set a base URL and a model for the custom provider first.",
   invalid_output: "The model's reply couldn't be read as cards. Try again or ask for fewer cards.",
   output_truncated: "The reply was cut off. Ask for fewer cards at a time.",
   refused: "The model declined this material. Try different source text.",

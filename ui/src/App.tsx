@@ -3,11 +3,17 @@
 // The real Card Studio UI (roadmap C01) replaces the generator panel.
 import { useCallback, useEffect, useRef, useState } from "react";
 import { EngineError, type EngineStatus, getStatus, onStatus, request } from "./ipc/engine";
-import type { Card, CardsGenerateResult, ProviderList } from "./ipc/protocol.gen";
+import type { Card, CardsGenerateResult, ProviderInfo, ProviderList } from "./ipc/protocol.gen";
 import { type KeyService, deleteKey, hasKey, saveKey } from "./ipc/secrets";
 import { describeError, describeProgress } from "./messages";
 
-const KEY_SERVICES: KeyService[] = ["anthropic", "openai"];
+const KEY_SERVICES: KeyService[] = ["anthropic", "openai", "custom"];
+
+const CUSTOM_EXAMPLES = [
+  ["Google Gemini", "https://generativelanguage.googleapis.com/v1beta/openai/"],
+  ["Groq", "https://api.groq.com/openai/v1"],
+  ["OpenRouter", "https://openrouter.ai/api/v1"],
+] as const;
 
 function StatusPill({ status }: { status: EngineStatus }) {
   const label =
@@ -22,6 +28,59 @@ function StatusPill({ status }: { status: EngineStatus }) {
     <output className={`pill pill-${status.state}`} aria-live="polite">
       {label}
     </output>
+  );
+}
+
+// Base URL and model for the "custom" OpenAI-compatible provider (roadmap A16).
+function CustomEndpointFields({
+  provider,
+  onSave,
+}: {
+  provider: ProviderInfo;
+  onSave: (baseUrl: string, model: string) => Promise<void>;
+}) {
+  const [baseUrl, setBaseUrl] = useState(provider.baseUrl ?? "");
+  const [model, setModel] = useState(provider.defaultModel);
+  const changed =
+    baseUrl.trim() !== (provider.baseUrl ?? "") || model.trim() !== provider.defaultModel;
+
+  return (
+    <div className="field">
+      <label htmlFor="custom-base-url">Base URL</label>
+      <input
+        id="custom-base-url"
+        type="url"
+        value={baseUrl}
+        placeholder="https://…/v1"
+        onChange={(e) => setBaseUrl(e.target.value)}
+      />
+      <label htmlFor="custom-model">Model</label>
+      <div className="row">
+        <input
+          id="custom-model"
+          value={model}
+          placeholder="Model name as the provider spells it"
+          onChange={(e) => setModel(e.target.value)}
+        />
+        <button
+          type="button"
+          disabled={!changed}
+          onClick={() => onSave(baseUrl.trim(), model.trim())}
+        >
+          Save
+        </button>
+      </div>
+      <p className="muted">
+        Any OpenAI-compatible API works. Examples:{" "}
+        {CUSTOM_EXAMPLES.map(([name, url], i) => (
+          <span key={name}>
+            {i > 0 && "; "}
+            {name} <code>{url}</code>
+          </span>
+        ))}
+        . Free tiers may use the text you send to train their models.
+      </p>
+    </div>
   );
 }
 
@@ -76,6 +135,17 @@ function ProviderPanel({ ready }: { ready: boolean }) {
         />
         <span>Local only: never send my notes off this computer</span>
       </label>
+      {active?.id === "custom" && (
+        <CustomEndpointFields
+          key={`${active.baseUrl}|${active.defaultModel}`}
+          provider={active}
+          onSave={async (baseUrl, model) => {
+            await request("settings/set", { key: "llm.custom.baseUrl", value: baseUrl || null });
+            await setSetting("llm.custom.model", model || null);
+            setMessage("Custom provider saved.");
+          }}
+        />
+      )}
       {active?.needsApiKey && (
         <div className="field">
           <label htmlFor="api-key">
@@ -133,7 +203,7 @@ function ProviderPanel({ ready }: { ready: boolean }) {
         >
           Test connection
         </button>
-        <span className="muted">Model: {active?.defaultModel}</span>
+        <span className="muted">Model: {active?.defaultModel || "not set"}</span>
       </div>
       {message && <p className="note">{message}</p>}
     </section>

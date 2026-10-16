@@ -17,7 +17,49 @@ def test_defaults(db: Database) -> None:
         "openai": "cloud",
         "ollama": "local",
         "lmstudio": "local",
+        "custom": "cloud",
     }
+
+
+def test_custom_needs_base_url_and_model(db: Database) -> None:
+    with pytest.raises(EngineError) as info:
+        ProviderRegistry(db).resolve("custom")
+    assert info.value.reason == Reason.PROVIDER_NOT_CONFIGURED
+    assert info.value.details["missing"] == ["llm.custom.baseUrl", "llm.custom.model"]
+
+    db.set_setting("llm.custom.baseUrl", "https://api.groq.com/openai/v1")
+    with pytest.raises(EngineError) as info:
+        ProviderRegistry(db).resolve("custom")
+    assert info.value.details["missing"] == ["llm.custom.model"]
+
+
+def test_custom_cloud_endpoint(db: Database) -> None:
+    db.set_setting("llm.custom.baseUrl", "https://api.groq.com/openai/v1")
+    db.set_setting("llm.custom.model", "llama-3.3-70b-versatile")
+    provider = ProviderRegistry(db).resolve("custom")
+    assert provider.location == "cloud"
+    assert provider.needs_api_key
+    info = next(p for p in ProviderRegistry(db).describe() if p.id == "custom")
+    assert info.needs_api_key
+    assert info.default_model == "llama-3.3-70b-versatile"
+
+
+def test_local_only_blocks_remote_custom_endpoint(db: Database) -> None:
+    db.set_setting("llm.localOnly", True)
+    db.set_setting("llm.custom.baseUrl", "https://openrouter.ai/api/v1")
+    db.set_setting("llm.custom.model", "some/model:free")
+    with pytest.raises(EngineError) as info:
+        ProviderRegistry(db).resolve("custom")
+    assert info.value.reason == Reason.LOCAL_ONLY_BLOCKED
+
+
+def test_local_only_allows_localhost_custom_endpoint(db: Database) -> None:
+    db.set_setting("llm.localOnly", True)
+    db.set_setting("llm.custom.baseUrl", "http://localhost:8080/v1")
+    db.set_setting("llm.custom.model", "qwen3")
+    provider = ProviderRegistry(db).resolve("custom")
+    assert provider.location == "local"
+    assert not provider.needs_api_key
 
 
 @pytest.mark.parametrize("provider_id", ["anthropic", "openai"])

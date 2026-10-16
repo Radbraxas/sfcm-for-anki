@@ -12,6 +12,9 @@ not failed, when its API key is missing or its local server is not running:
     openai     OPENAI_API_KEY      ~US$0.01 per run
     ollama     server on http://localhost:11434 with the model pulled (free)
     lmstudio   server on http://localhost:1234 with a model loaded (free)
+    custom     SFCM_SMOKE_CUSTOM_BASE_URL and SFCM_SMOKE_CUSTOM_MODEL, plus
+               SFCM_CUSTOM_API_KEY unless the URL is localhost (e.g. a free Gemini,
+               Groq or OpenRouter key)
 
 Model overrides: SFCM_SMOKE_<PROVIDER>_MODEL, e.g. SFCM_SMOKE_OLLAMA_MODEL=qwen3:8b.
 Exit code is 1 if any provider that was tried failed.
@@ -32,7 +35,7 @@ from sfcm_engine.generation import generate_cards
 from sfcm_engine.llm.registry import DEFAULTS, ProviderRegistry
 from sfcm_engine.prompts import PromptLibrary
 from sfcm_engine.protocol import CardsGenerateParams, ProviderId
-from sfcm_engine.secrets import EnvKeySource
+from sfcm_engine.secrets import ENV_VARS, EnvKeySource
 
 SOURCE = (
     "Mitochondria produce most of a cell's ATP through oxidative phosphorylation on the "
@@ -50,10 +53,13 @@ def server_up(base_url: str) -> bool:
 
 
 async def check(provider_id: ProviderId, registry: ProviderRegistry) -> str:
+    missing = registry.missing_settings(provider_id)
+    if missing:
+        return f"SKIP  {provider_id:<9} not configured (needs {', '.join(missing)})"
     provider = registry.build(provider_id)
     key = await EnvKeySource().get(provider_id) if provider.needs_api_key else None
     if provider.needs_api_key and not key:
-        return f"SKIP  {provider_id:<9} no {provider_id.upper()}_API_KEY in the environment"
+        return f"SKIP  {provider_id:<9} no {ENV_VARS[provider_id]} in the environment"
     if provider.location == "local" and not server_up(str(provider.base_url)):
         return f"SKIP  {provider_id:<9} no server at {provider.base_url}"
     model = os.environ.get(f"SFCM_SMOKE_{provider_id.upper()}_MODEL") or registry.model_for(
@@ -93,6 +99,10 @@ async def main_async(wanted: list[str]) -> int:
         return 2
     db = Database(":memory:")
     db.migrate()
+    for setting, var in (("baseUrl", "BASE_URL"), ("model", "MODEL")):
+        value = os.environ.get(f"SFCM_SMOKE_CUSTOM_{var}")
+        if value:
+            db.set_setting(f"llm.custom.{setting}", value)
     registry = ProviderRegistry(db)
     failed = False
     selected: list[ProviderId] = [p for p in all_ids if not wanted or str(p) in wanted]

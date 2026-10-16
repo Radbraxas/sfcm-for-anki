@@ -17,6 +17,7 @@ from .redaction import register_secret
 ENV_VARS = {
     "anthropic": "ANTHROPIC_API_KEY",
     "openai": "OPENAI_API_KEY",
+    "custom": "SFCM_CUSTOM_API_KEY",
 }
 
 

@@ -55,7 +55,7 @@ mix?: ("auto" | "basic" | "cloze")
 depth?: ("intro" | "university" | "expert")
 language?: string
 extras?: ("all" | "why" | "none")
-providerId?: (("anthropic" | "openai" | "ollama" | "lmstudio") | null)
+providerId?: (("anthropic" | "openai" | "ollama" | "lmstudio" | "custom") | null)
 model?: (string | null)
 }
 export interface CardsGenerateResult {
@@ -97,7 +97,7 @@ message: string
 fraction: (number | null)
 }
 export interface ProviderInfo {
-id: ("anthropic" | "openai" | "ollama" | "lmstudio")
+id: ("anthropic" | "openai" | "ollama" | "lmstudio" | "custom")
 name: string
 location: ("cloud" | "local")
 needsApiKey: boolean
@@ -108,10 +108,10 @@ blockedByLocalOnly: boolean
 export interface ProviderList {
 providers: ProviderInfo[]
 localOnly: boolean
-activeProvider: ("anthropic" | "openai" | "ollama" | "lmstudio")
+activeProvider: ("anthropic" | "openai" | "ollama" | "lmstudio" | "custom")
 }
 export interface ProviderTestParams {
-providerId: ("anthropic" | "openai" | "ollama" | "lmstudio")
+providerId: ("anthropic" | "openai" | "ollama" | "lmstudio" | "custom")
 model?: (string | null)
 }
 export interface ProviderTestResult {
@@ -124,7 +124,7 @@ engineVersion: string
 protocolVersion: number
 }
 export interface SecretsGetParams {
-service: ("anthropic" | "openai" | "ollama" | "lmstudio")
+service: ("anthropic" | "openai" | "ollama" | "lmstudio" | "custom")
 }
 export interface SecretsGetResult {
 value: (string | null)

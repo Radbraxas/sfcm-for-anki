@@ -12,7 +12,7 @@ from pydantic import BaseModel, Field, JsonValue
 
 from .cards import CamelModel, Card
 
-ProviderId = Literal["anthropic", "openai", "ollama", "lmstudio"]
+ProviderId = Literal["anthropic", "openai", "ollama", "lmstudio", "custom"]
 Effort = Literal["low", "medium", "high"]
 
 

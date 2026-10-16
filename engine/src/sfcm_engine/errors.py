@@ -30,6 +30,7 @@ class Reason(StrEnum):
     MODEL_NOT_FOUND = "model_not_found"
     LOCAL_ONLY_BLOCKED = "local_only_blocked"
     UNKNOWN_PROVIDER = "unknown_provider"
+    PROVIDER_NOT_CONFIGURED = "provider_not_configured"
     INVALID_OUTPUT = "invalid_output"
     OUTPUT_TRUNCATED = "output_truncated"
     REFUSED = "refused"
