@@ -89,6 +89,12 @@ build-engine:
 build: build-engine
     pnpm tauri build --config app/src-tauri/tauri.bundle.json
 
+# --- Live provider check ---------------------------------------------------
+
+# Send one small real request to each reachable provider (costs a few cents with keys)
+smoke *PROVIDERS:
+    {{engine}} python engine/scripts/live_smoke.py {{PROVIDERS}}
+
 # --- Evals -----------------------------------------------------------------
 
 # Score card quality against the golden sources (needs ANTHROPIC_API_KEY)

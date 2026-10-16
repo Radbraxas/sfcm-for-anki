@@ -4,6 +4,6 @@ This project adopts the [Contributor Covenant, version 2.1](https://www.contribu
 
 ## Reporting
 
-Report unacceptable behavior to the maintainers at **CONDUCT_CONTACT_EMAIL** (TODO: maintainer to fill in before the repository is announced). Reports are handled confidentially. Maintainers who are the subject of a report step aside from handling it.
+Report unacceptable behavior to the maintainers at **fyfmfe@gmail.com**. Reports are handled confidentially. Maintainers who are the subject of a report step aside from handling it.
 
 Enforcement follows the Contributor Covenant 2.1 enforcement guidelines: correction, warning, temporary ban, permanent ban.
