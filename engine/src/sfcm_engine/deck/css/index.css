@@ -1,0 +1,14 @@
+/* SPDX-License-Identifier: AGPL-3.0-or-later */
+/* Index card: white card on a cool grey page, cobalt accent, red labels. */
+.card {
+  --sfcm-page: #eef1f6;
+  --sfcm-card: #ffffff;
+  --sfcm-ink: #1b2333;
+  --sfcm-muted: #7a8599;
+  --sfcm-line: #dbe3ee;
+  --sfcm-accent: #2346d8;
+  --sfcm-label: #e2493f;
+  --sfcm-panel: rgba(35, 70, 216, .06);
+  --sfcm-cloze: #2346d8;
+  --sfcm-cloze-ink: #ffffff;
+}
