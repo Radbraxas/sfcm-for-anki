@@ -16,6 +16,7 @@ const REASONS: Record<string, string> = {
   invalid_output: "The model's reply couldn't be read as cards. Try again or ask for fewer cards.",
   output_truncated: "The reply was cut off. Ask for fewer cards at a time.",
   refused: "The model declined this material. Try different source text.",
+  invalid_export_path: "Choose a folder that exists and a file name ending in .apkg.",
   shell_unavailable: "The app couldn't reach your system keychain.",
 };
 
@@ -23,6 +24,7 @@ const PROGRESS: Record<string, string> = {
   preparing_prompt: "Preparing…",
   calling_provider: "Writing cards…",
   validating: "Checking cards…",
+  writing_package: "Writing the Anki package…",
   done: "Done.",
 };
 

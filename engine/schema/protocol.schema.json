@@ -7,6 +7,10 @@
       "params": "CardsGenerateParams",
       "result": "CardsGenerateResult"
     },
+    "decks/export": {
+      "params": "DecksExportParams",
+      "result": "DecksExportResult"
+    },
     "engine/info": {
       "params": "Empty",
       "result": "EngineInfo"
@@ -256,6 +260,73 @@
         "usage"
       ],
       "title": "CardsGenerateResult",
+      "type": "object"
+    },
+    "DecksExportParams": {
+      "additionalProperties": false,
+      "properties": {
+        "cards": {
+          "items": {
+            "$ref": "#/$defs/Card"
+          },
+          "minItems": 1,
+          "title": "Cards",
+          "type": "array"
+        },
+        "outPath": {
+          "description": "Absolute path of the .apkg to write; overwritten.",
+          "title": "Outpath",
+          "type": "string"
+        },
+        "deckName": {
+          "default": "SFCM",
+          "description": "Anki deck path, `::` for subdecks.",
+          "title": "Deckname",
+          "type": "string"
+        },
+        "theme": {
+          "const": "index",
+          "default": "index",
+          "title": "Theme",
+          "type": "string"
+        },
+        "legacy": {
+          "default": false,
+          "description": "Older package format for Anki < 2.1.50.",
+          "title": "Legacy",
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "cards",
+        "outPath"
+      ],
+      "title": "DecksExportParams",
+      "type": "object"
+    },
+    "DecksExportResult": {
+      "additionalProperties": false,
+      "properties": {
+        "path": {
+          "title": "Path",
+          "type": "string"
+        },
+        "notes": {
+          "title": "Notes",
+          "type": "integer"
+        },
+        "cards": {
+          "description": "Review cards created (reversed and cloze notes make more).",
+          "title": "Cards",
+          "type": "integer"
+        }
+      },
+      "required": [
+        "path",
+        "notes",
+        "cards"
+      ],
+      "title": "DecksExportResult",
       "type": "object"
     },
     "Empty": {

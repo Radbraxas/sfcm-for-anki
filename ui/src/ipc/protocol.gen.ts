@@ -75,6 +75,33 @@ cacheReadTokens: number
 cacheWriteTokens: number
 costUsd: (number | null)
 }
+export interface DecksExportParams {
+/**
+ * @minItems 1
+ */
+cards: [Card, ...(Card)[]]
+/**
+ * Absolute path of the .apkg to write; overwritten.
+ */
+outPath: string
+/**
+ * Anki deck path, `::` for subdecks.
+ */
+deckName?: string
+theme?: "index"
+/**
+ * Older package format for Anki < 2.1.50.
+ */
+legacy?: boolean
+}
+export interface DecksExportResult {
+path: string
+notes: number
+/**
+ * Review cards created (reversed and cloze notes make more).
+ */
+cards: number
+}
 export interface Empty {
 
 }
@@ -144,6 +171,7 @@ value: JsonValue
 /** UI -> engine requests. */
 export interface MethodMap {
   "cards/generate": { params: CardsGenerateParams; result: CardsGenerateResult };
+  "decks/export": { params: DecksExportParams; result: DecksExportResult };
   "engine/info": { params: Empty; result: EngineInfo };
   "providers/list": { params: Empty; result: ProviderList };
   "providers/test": { params: ProviderTestParams; result: ProviderTestResult };

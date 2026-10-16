@@ -35,6 +35,7 @@ class Reason(StrEnum):
     OUTPUT_TRUNCATED = "output_truncated"
     REFUSED = "refused"
     SHELL_UNAVAILABLE = "shell_unavailable"
+    INVALID_EXPORT_PATH = "invalid_export_path"
 
 
 class EngineError(Exception):

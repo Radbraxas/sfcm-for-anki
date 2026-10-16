@@ -109,6 +109,25 @@ class CardsGenerateResult(CamelModel):
     usage: Usage
 
 
+# --- decks/* ----------------------------------------------------------------
+
+ThemeKey = Literal["index"]
+
+
+class DecksExportParams(CamelModel):
+    cards: list[Card] = Field(min_length=1)
+    out_path: str = Field(description="Absolute path of the .apkg to write; overwritten.")
+    deck_name: str = Field(default="SFCM", description="Anki deck path, `::` for subdecks.")
+    theme: ThemeKey = "index"
+    legacy: bool = Field(default=False, description="Older package format for Anki < 2.1.50.")
+
+
+class DecksExportResult(CamelModel):
+    path: str
+    notes: int
+    cards: int = Field(description="Review cards created (reversed and cloze notes make more).")
+
+
 # --- Notifications (engine -> UI) --------------------------------------------
 
 
@@ -144,6 +163,7 @@ METHODS: dict[str, tuple[type[BaseModel], type[BaseModel]]] = {
     "providers/list": (Empty, ProviderList),
     "providers/test": (ProviderTestParams, ProviderTestResult),
     "cards/generate": (CardsGenerateParams, CardsGenerateResult),
+    "decks/export": (DecksExportParams, DecksExportResult),
 }
 
 SHELL_METHODS: dict[str, tuple[type[BaseModel], type[BaseModel]]] = {

@@ -3,6 +3,7 @@
 
 from __future__ import annotations
 
+import asyncio
 import platform
 import time
 from dataclasses import dataclass
@@ -13,6 +14,7 @@ from pydantic import BaseModel, ConfigDict
 
 from . import PROTOCOL_VERSION, __version__
 from .db import Database
+from .errors import EngineError, Reason
 from .generation import generate_cards
 from .llm.base import StructuredRequest
 from .llm.registry import ProviderRegistry
@@ -20,6 +22,8 @@ from .prompts import PromptLibrary
 from .protocol import (
     CardsGenerateParams,
     CardsGenerateResult,
+    DecksExportParams,
+    DecksExportResult,
     Empty,
     EngineInfo,
     ProviderList,
@@ -63,6 +67,7 @@ class App:
         server.method("providers/list")(self.providers_list)
         server.method("providers/test")(self.providers_test)
         server.method("cards/generate")(self.cards_generate)
+        server.method("decks/export")(self.decks_export)
 
     async def engine_info(self, _params: Empty, _ctx: Context) -> EngineInfo:
         return EngineInfo(
@@ -148,3 +153,26 @@ class App:
             model=outcome.model,
             usage=outcome.usage,
         )
+
+    async def decks_export(self, params: DecksExportParams, ctx: Context) -> DecksExportResult:
+        out = Path(params.out_path)
+        if not out.is_absolute() or out.suffix != ".apkg" or not out.parent.is_dir():
+            raise EngineError(
+                Reason.INVALID_EXPORT_PATH,
+                "export path must be an absolute .apkg path in an existing folder",
+                path=params.out_path,
+            )
+        # Imported here: the anki package takes a moment to load and most sessions
+        # start without exporting anything.
+        from .deck.package import write_package
+
+        ctx.progress("writing_package", None)
+        result = await asyncio.to_thread(
+            write_package,
+            params.cards,
+            out,
+            deck_name=params.deck_name,
+            theme=params.theme,
+            legacy=params.legacy,
+        )
+        return DecksExportResult(path=str(result.path), notes=result.notes, cards=result.cards)
